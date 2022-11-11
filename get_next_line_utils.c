@@ -6,85 +6,57 @@
 /*   By: mramiro- <mramiro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:24:19 by mramiro-          #+#    #+#             */
-/*   Updated: 2022/11/11 15:26:03 by mramiro-         ###   ########.fr       */
+/*   Updated: 2022/11/11 18:56:15 by mramiro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-//char	*readdoc(int fd, size_t size)
-//{
-//	char	*c;
-//	int		i;
-//
-//	i = 0;
-//	c = malloc(size);
-//	if (!c)
-//		return (0);
-//	read(fd, c, size);
-//	allocatelines(fd, c);
-//	free(fd);
-//	return (c);
-//}
-//
-//int	countcharline(char *line)
-//{
-//	int	i;
-//
-//	i = 0;
-//	while (line[i] != '\n')
-//	{
-//		i++;
-//	}
-//	return (i);
-//}
-//
-//char	*allocatelines(int fd, char *docContent)
-//{
-//	static int 	size;
-//	char		*result;
-//	int			i;
-//
-//	i = 0;
-//	size += countcharline(docContent + size);
-//	result = malloc(size);
-//	if (!result)
-//		return (0);
-//	read(fd, result, size);
-//	return (result);
-//}
-
-char	*readdoc(int fd, size_t size)
+char	*readdoc(int fd, char *buffer, size_t size)
 {
-	char	*c;
-	int		i;
-	int		n;
-	char	*result;
+	int i;
+	char *out;
+	static int len;
 
 	i = 0;
-	c = malloc(c);
-	if (!c)
-		return (0);
-	read(fd, c, size);
-	while (c[i] != '\0')
+	len = 0;
+	if (buscarn(buffer) == 0)
 	{
-		n += (int)size;
-		read(fd, c + n, size);
-		result = malloc(n);
-		i++;
+		out = malloc(len);
+		if (!out)
+			return (0);
+		out = getline(out, buffer + len);
+		free(out);
+		len += size;
 	}
-	return (c);
+	else
+	{
+		len = buscarn(buffer);
+	}
 }
 
-int	validarn(char *str)
+char *getline(char *out, char *buffer)
+{
+	int i;
+
+	i = 0;
+	while (buffer[i] != '\n')
+	{
+		out[i] = buffer[i];
+		i++;
+	}
+	return (out);
+}
+
+int	buscarn(char *str)
 {
 	int	i;
 
 	i = 0;
-	while (str[i] != '\n')
+	while (str[i] != '\0')
 	{
-		if (str[i] == '\n')
-			return (1);
+		if (str[i] != '\n')
+			return (i);
 		i++;
 	}
 	return (0);

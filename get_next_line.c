@@ -6,7 +6,7 @@
 /*   By: mramiro- <mramiro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 10:50:04 by mramiro-          #+#    #+#             */
-/*   Updated: 2022/11/11 12:43:15 by mramiro-         ###   ########.fr       */
+/*   Updated: 2022/11/11 19:03:22 by mramiro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 char	*get_next_line(int fd)
 {
 	char	*str;
+
 	str = malloc(BUFFER_SIZE);
-	readdoc(fd, BUFFER_SIZE);
+	read(fd, str, BUFFER_SIZE);
 	return (str);
 }
