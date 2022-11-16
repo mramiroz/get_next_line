@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mramiro- <mramiro-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mrarmiro- <mramiro-@student.42madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 10:50:04 by mramiro-          #+#    #+#             */
-/*   Updated: 2022/11/15 10:59:54 by mramiro-         ###   ########.fr       */
+/*   Updated: 2022/11/15 18:58:46 by mrarmiro-        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ int	searchn(char *str)
 char *copiarenout(char *buffer)
 {
 	int i;
-	static char *out;
+	char *out;
 	static int size;
-	static int n;
+	int n;
 
 	size += BUFFER_SIZE;
 	i = 0;
@@ -49,31 +49,28 @@ char *readdoc(int fd)
 {
 	char	*out;
 	char	*buffer;
-	int		bytenum;
+	char 	*temp;
 
 	buffer = malloc(BUFFER_SIZE);
 	if (!buffer)
 		return (0);
-	bytenum = read(fd, buffer, BUFFER_SIZE);
-	if (!bytenum)
-		return (-1);
-	if (searchn(buffer) == 0)
+	read(fd, buffer, BUFFER_SIZE);
+	if (searchn(buffer) != 0)
 	{
 		out = copiarenout(buffer);
-		while (searchn(buffer) == 0)
-		{
-			read(fd, buffer, BUFFER_SIZE);
-			free(out);
-			out = copiarenout(buffer);
-		}
-		readdoc(fd);
+		return (out);
 	}
-	else
+	//if (!bytenum)
+	//	return (-1);
+	temp = copiarenout(buffer);
+	while (searchn(buffer) == 0)
 	{
-		out = copiarenout(buffer);
+		read(fd, buffer, BUFFER_SIZE);
+		out = ft_strjoin(temp, buffer);
+		temp = ft_strdup(out);
 	}
 	free(buffer);
-	return (out);
+	return (temp);
 }
 
 char *get_next_line(int fd)
