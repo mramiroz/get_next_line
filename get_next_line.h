@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrarmiro- <mramiro-@student.42madrid.co    +#+  +:+       +#+        */
+/*   By: mramiro- <mramiro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:23:36 by mramiro-          #+#    #+#             */
-/*   Updated: 2022/11/15 18:41:17 by mrarmiro-        ###   ########.fr       */
+/*   Updated: 2022/11/22 11:09:37 by mramiro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@
 char	*ft_strjoin(char const *s1, char const *s2);
 int     ft_strlen(const char *str);
 char	*ft_strjoin(char const *s1, char const *s2);
-char *get_next_line(int fd);
-char *readdoc(int fd);
-char *copiarenout(char *buffer);
-int	searchn(char *str);
+char 	*get_next_line(int fd);
+char 	*readdoc(int fd);
+char 	*copiarenout(char *buffer);
+int		searchn(const char *str);
 char	*ft_strdup(const char *s);
 
 

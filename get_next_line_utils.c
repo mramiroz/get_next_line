@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrarmiro- <mramiro-@student.42madrid.co    +#+  +:+       +#+        */
+/*   By: mramiro- <mramiro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:24:19 by mramiro-          #+#    #+#             */
-/*   Updated: 2022/11/15 18:48:38 by mrarmiro-        ###   ########.fr       */
+/*   Updated: 2022/11/22 13:19:37 by mramiro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ char	*ft_strdup(const char *s)
 		dest[i] = s[i];
 		i++;
 	}
-	dest[i] = '\0';
+	if (s[i] == '\n')
+		dest[i] = '\n';
+	else
+		dest[i] = '\0';
 	return (dest);
 }
 
@@ -55,20 +58,19 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (0);
 	i = 0;
 	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
+	if(searchn(s2) != 0)
+		len2 = searchn(s2);
+	else
+		len2 = ft_strlen(s2);
 	s = (char *)malloc(sizeof(char) * (len1 + len2 + 1));
 	if (!s)
 		return (0);
 	i = -1;
 	while (s1[++i])
-	{
 		s[i] = s1[i];
-	}
 	i = -1;
 	while (s2[++i])
-	{
 		s[len1++] = s2[i];
-	}
 	s[len1] = '\0';
 	return (s);
 }
