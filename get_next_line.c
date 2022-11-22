@@ -6,7 +6,7 @@
 /*   By: mramiro- <mramiro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 10:50:04 by mramiro-          #+#    #+#             */
-/*   Updated: 2022/11/22 13:28:48 by mramiro-         ###   ########.fr       */
+/*   Updated: 2022/11/22 13:32:23 by mramiro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ char	*readdoc(int fd)
 	temp = copiarenout(buffer);
 	while (searchn(buffer) == 0)
 	{
+		out = ft_strjoin(out, buffer);
+		free(buffer);
 		read(fd, buffer, BUFFER_SIZE);
-		out = ft_strjoin(temp, buffer);
-		temp = ft_strdup(out);
 	}
 	return (temp);
 }
