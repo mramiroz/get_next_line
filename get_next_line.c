@@ -6,13 +6,15 @@
 /*   By: mramiro- <mramiro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 10:50:04 by mramiro-          #+#    #+#             */
-/*   Updated: 2022/11/22 13:32:23 by mramiro-         ###   ########.fr       */
+/*   Updated: 2022/11/29 10:26:35 by mramiro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 #include <fcntl.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 
 int	searchn(const char *str)
 {
@@ -32,17 +34,18 @@ char	*copiarenout(char *buffer)
 {
 	int				i;
 	char			*out;
-	static	int 	size;
+	int 	size;
 	int				n;
-
+	
+	size = 0;
 	size += BUFFER_SIZE;
 	i = 0;
 	n = 0;
 	out = malloc(size);
+	if(!out)
+		return(0);
 	while (i < BUFFER_SIZE && buffer[i] != '\n')
-	{
 		out[n++] = buffer[i++];
-	}
 	if (buffer[i] == '\n')
 		out[n] = '\n';
 	else if (buffer[i] == '\0')
@@ -50,36 +53,48 @@ char	*copiarenout(char *buffer)
 	return (out);
 }
 
-char	*readdoc(int fd)
+char	*readdoc(char *out, int fd)
 {
-	static char	*out;
 	char	*buffer;
 	char	*temp;
+	int		numbytes;
 
 	buffer = malloc(BUFFER_SIZE);
-	if (!buffer)
-		return (0);
-	read(fd, buffer, BUFFER_SIZE);
+	numbytes = read(fd, buffer, BUFFER_SIZE);
 	if (searchn(buffer) != 0)
 	{
 		out = copiarenout(buffer);
+		free(buffer);
 		return (out);
 	}
-	temp = copiarenout(buffer);
-	while (searchn(buffer) == 0)
+	out = copiarenout(buffer);
+	while (searchn(buffer) == 0 && searchn(out) == 0)
 	{
-		out = ft_strjoin(out, buffer);
-		free(buffer);
 		read(fd, buffer, BUFFER_SIZE);
+		temp = ft_strjoin(out, buffer);
+		out = ft_strdup(temp);
+		free(temp);
 	}
-	return (temp);
+	free(buffer);
+	return (out);
 }
 
 char	*get_next_line(int fd)
 {
-	char	*out;
+	static char	*out;
 
-	out = readdoc(fd);
+	if (read(fd, 0, 0) < 0)
+	{
+		if (out != NULL)
+		{
+			free(out);
+			out = NULL;
+		}
+		return (NULL);
+	}
+	if (fd < 0 || BUFFER_SIZE < 0)
+		return (NULL);
+	out = readdoc(out, fd);
 	if (!out)
 		return (0);
 	return (out);
@@ -93,4 +108,5 @@ int main()
 	//read(fd, buffer, BUFFER_SIZE);
 	//printf("%s", buffer);
 	//printf("%d",buscarn("Hola \nBuenas"));
+	system("leaks -q a.out");
 }

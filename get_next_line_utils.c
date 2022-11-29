@@ -6,11 +6,12 @@
 /*   By: mramiro- <mramiro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:24:19 by mramiro-          #+#    #+#             */
-/*   Updated: 2022/11/22 13:19:37 by mramiro-         ###   ########.fr       */
+/*   Updated: 2022/11/29 09:32:08 by mramiro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 int	ft_strlen(const char *str)
 {
@@ -47,7 +48,7 @@ char	*ft_strdup(const char *s)
 	return (dest);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	int		i;
 	int		len1;
@@ -72,5 +73,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (s2[++i])
 		s[len1++] = s2[i];
 	s[len1] = '\0';
+	free(s1);
 	return (s);
 }
