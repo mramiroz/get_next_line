@@ -6,7 +6,7 @@
 /*   By: mramiro- <mramiro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:24:19 by mramiro-          #+#    #+#             */
-/*   Updated: 2022/11/29 09:32:08 by mramiro-         ###   ########.fr       */
+/*   Updated: 2022/12/14 16:03:20 by mramiro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,12 @@ char	*ft_strdup(const char *s)
 	dest = (char *)malloc(sizeof(char) * (size + 1));
 	if (!dest)
 		return (NULL);
-	while (s[i] != '\0' && s[i] != '\n')
+	while (s[i] != '\0')
 	{
 		dest[i] = s[i];
 		i++;
 	}
-	if (s[i] == '\n')
-		dest[i] = '\n';
-	else
-		dest[i] = '\0';
+	dest[i] = '\0';
 	return (dest);
 }
 

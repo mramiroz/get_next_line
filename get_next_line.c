@@ -6,7 +6,7 @@
 /*   By: mramiro- <mramiro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 10:50:04 by mramiro-          #+#    #+#             */
-/*   Updated: 2022/11/29 12:55:51 by mramiro-         ###   ########.fr       */
+/*   Updated: 2022/12/14 17:34:06 by mramiro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,91 +32,93 @@ int	searchn(const char *str)
 
 char	*copiarenout(char *buffer)
 {
-	int				i;
-	char			*out;
-	int 	size;
-	int				n;
+	int i;
+	char *out;
 
-	size = 0;
-	size += BUFFER_SIZE;
+	out = malloc(searchn(buffer));
 	i = 0;
-	n = 0;
-	out = malloc(size);
-	if(!out)
-		return(0);
-	while (i < BUFFER_SIZE && buffer[i] != '\n')
-		out[n++] = buffer[i++];
-	if (buffer[i] == '\n')
-		out[n] = '\n';
-	else if (buffer[i] == '\0')
-		out[n] = '\0';
+	while (buffer[i] != '\n')
+	{
+		out[i] = buffer[i];
+		i++;
+	}
 	return (out);
 }
 
 char	*readdoc(char *buffer, int fd)
 {
 	char	*out;
-	char	*temp;
 	int		numbytes;
 
-	buffer = malloc(BUFFER_SIZE);
+	read(fd, buffer, BUFFER_SIZE);
+	printf("%s", buffer);
 	if (!buffer)
-		return (0);
+	{
+		buffer = malloc(BUFFER_SIZE);
+		if (!buffer)
+			return (0);
+	}
 	numbytes = read(fd, buffer, BUFFER_SIZE);
 	if (numbytes == -1)
 		return (0);
-	out = copiarenout(buffer);
+	out = ft_strdup(buffer);
 	while (searchn(buffer) == 0)
 	{
-		numbytes = read(fd, buffer, BUFFER_SIZE);
-		printf("%s\n", buffer);
-		temp = ft_strjoin(out, buffer);
-		out = ft_strdup(temp);
-		free(temp);
+		read(fd, buffer, BUFFER_SIZE);
+		out = ft_strjoin(out, buffer);
 	}
 	free(buffer);
 	return (out);
 }
-//char* updateOut(int fd, char *buffer)
-//{
-//	int size;
-//	static char *out;
-//
-//	size = ft_strlen(buffer);
-//	read(fd, out + size, BUFFER_SIZE);
-//	return (out);
-//}
+
+static char *saverest(char *buffer)
+{
+	int c;
+	int i;
+	static char *out;
+
+	c = searchn(buffer) + 1;	
+	i = 0;
+	out = malloc(ft_strlen(buffer) - c);
+	while (i < ft_strlen(out))
+	{
+		out[i] = buffer[c];
+		i++;
+		c++;
+	}
+	return (out);
+}
+
 char	*get_next_line(int fd)
 {
-	static char	*out;
-	char *temp;
+	char		*out;
+	static char	*temp;
 
 	if (read(fd, 0, 0) < 0)
 	{
-		if (out != NULL)
+		if (temp != NULL)
 		{
-			free(out);
-			out = NULL;
+			free(temp);
+			temp = NULL;
 		}
 		return (NULL);
 	}
 	if (fd < 0 || BUFFER_SIZE < 0)
 		return (NULL);
-	temp = readdoc(out, fd);
-	read(fd, out, BUFFER_SIZE);
-	printf("%s", out);
-	return (temp);
+	out = readdoc(temp, fd);
+	printf("Read: %s\n", out);
+	temp = saverest(out);
+	printf("Save: %s\n", temp);
+	out = copiarenout(out);
+	return (out);
 }
 
 int main()
 {
 	int fd = open("archivo.txt", O_RDONLY);
-	printf("%s", get_next_line(fd));
+	printf("%s\n", get_next_line(fd));
 	fd = open("archivo.txt", O_RDONLY);
 	printf("%s", get_next_line(fd));
-	//char *buffer = malloc(BUFFER_SIZE);
-	//read(fd, buffer, BUFFER_SIZE);
-	//printf("%s", buffer);
-	//printf("%d",buscarn("Hola \nBuenas"));
-	system("leaks -q a.out");
+
+	//system("leaks -q a.out");
 }
