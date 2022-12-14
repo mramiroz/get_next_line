@@ -6,7 +6,7 @@
 /*   By: mramiro- <mramiro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:23:36 by mramiro-          #+#    #+#             */
-/*   Updated: 2022/11/29 09:51:19 by mramiro-         ###   ########.fr       */
+/*   Updated: 2022/12/14 17:58:20 by mramiro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdlib.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 50
 # endif
 
 char	*ft_strjoin(char *s1, char *s2);

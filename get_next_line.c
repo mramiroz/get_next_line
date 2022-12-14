@@ -6,7 +6,7 @@
 /*   By: mramiro- <mramiro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 10:50:04 by mramiro-          #+#    #+#             */
-/*   Updated: 2022/12/14 17:34:06 by mramiro-         ###   ########.fr       */
+/*   Updated: 2022/12/14 18:35:29 by mramiro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,13 @@ char	*readdoc(char *buffer, int fd)
 	char	*out;
 	int		numbytes;
 
-	read(fd, buffer, BUFFER_SIZE);
-	printf("%s", buffer);
-	if (!buffer)
-	{
-		buffer = malloc(BUFFER_SIZE);
-		if (!buffer)
-			return (0);
-	}
+	// printf("BUFF -> %s\n", buffer);
+	buffer = malloc(BUFFER_SIZE);
 	numbytes = read(fd, buffer, BUFFER_SIZE);
 	if (numbytes == -1)
 		return (0);
 	out = ft_strdup(buffer);
-	while (searchn(buffer) == 0)
+	while (searchn(buffer) == 0 && searchn(out) == 0)
 	{
 		read(fd, buffer, BUFFER_SIZE);
 		out = ft_strjoin(out, buffer);
@@ -117,8 +111,7 @@ int main()
 {
 	int fd = open("archivo.txt", O_RDONLY);
 	printf("%s\n", get_next_line(fd));
-	fd = open("archivo.txt", O_RDONLY);
-	printf("%s", get_next_line(fd));
+	printf("%s\n", get_next_line(fd));
 
 	//system("leaks -q a.out");
 }
