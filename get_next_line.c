@@ -6,7 +6,7 @@
 /*   By: mramiro- <mramiro-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 10:50:04 by mramiro-          #+#    #+#             */
-/*   Updated: 2022/12/14 18:35:29 by mramiro-         ###   ########.fr       */
+/*   Updated: 2023/01/10 17:49:51 by mramiro-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,25 @@ char	*copiarenout(char *buffer)
 		out[i] = buffer[i];
 		i++;
 	}
+	out[i] = '\0';
 	return (out);
 }
 
 char	*readdoc(char *buffer, int fd)
 {
 	char	*out;
+	char	*save;
 	int		numbytes;
 
-	// printf("BUFF -> %s\n", buffer);
-	buffer = malloc(BUFFER_SIZE);
-	numbytes = read(fd, buffer, BUFFER_SIZE);
-	if (numbytes == -1)
-		return (0);
+	if (!buffer)
+	{
+		buffer = malloc(BUFFER_SIZE);
+		numbytes = read(fd, buffer, BUFFER_SIZE);
+		if (numbytes == -1)
+			return (0);
+	}
+	else
+		save = ft_strdup(buffer);
 	out = ft_strdup(buffer);
 	while (searchn(buffer) == 0 && searchn(out) == 0)
 	{
@@ -73,20 +79,21 @@ static char *saverest(char *buffer)
 
 	c = searchn(buffer) + 1;	
 	i = 0;
+	printf("C: %i\n", c);
+	printf("L: %i\n", ft_strlen(buffer) - c);
 	out = malloc(ft_strlen(buffer) - c);
+	printf("Temp: %s\n\n", buffer);
 	while (i < ft_strlen(out))
-	{
-		out[i] = buffer[c];
-		i++;
-		c++;
-	}
+		out[i++] = buffer[c++];
+	printf("Out: %s\n", out);
+	out[i] = '\0';
 	return (out);
 }
 
 char	*get_next_line(int fd)
 {
 	char		*out;
-	static char	*temp;
+	static char	*temp = NULL;
 
 	if (read(fd, 0, 0) < 0)
 	{
@@ -99,19 +106,32 @@ char	*get_next_line(int fd)
 	}
 	if (fd < 0 || BUFFER_SIZE < 0)
 		return (NULL);
-	out = readdoc(temp, fd);
-	printf("Read: %s\n", out);
-	temp = saverest(out);
-	printf("Save: %s\n", temp);
-	out = copiarenout(out);
-	return (out);
+	printf("Temp: %s\n", temp);
+	if (!temp || searchn(temp) == 0)
+	{
+		out = readdoc(temp, fd);
+		printf("Read: %s\n", out);
+		temp = saverest(out);
+		printf("Save: %s\n", temp);
+		out = copiarenout(out);
+		return (out);
+	}
+	else
+	{
+		printf("OUTB: %s\n", temp);
+		out = copiarenout(temp);
+		printf("OUTB: %s\n", out);
+		return (out);
+	}
 }
+
 
 int main()
 {
 	int fd = open("archivo.txt", O_RDONLY);
-	printf("%s\n", get_next_line(fd));
-	printf("%s\n", get_next_line(fd));
-
+	printf("Return: %s\n", get_next_line(fd));
+	printf("Return: %s\n", get_next_line(fd));
+	printf("Return: %s\n", get_next_line(fd));
 	//system("leaks -q a.out");
 }
+
