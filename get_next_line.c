@@ -31,25 +31,32 @@ int searchn(char *c)
     return (0);
 }
 
-char *readdoc(int fd)
+char *readdoc(int fd, char *buffer)
 {
     char *out;
-    char *buffer;
     int nbytes;
 
+    if (!buffer)
+        buffer = ft_calloc(1, sizeof(char));
     nbytes = 1;
-    out = ft_calloc(1, sizeof(char));
-    buffer = ft_calloc(1, sizeof(char));
-    
-    while(nbytes > 0 && searchn(out) == 0)
+    out = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
+    if (!out)
+        return(NULL);
+    while(nbytes > 0)
     {
-        nbytes = read(fd, buffer, BUFFER_SIZE);
+        nbytes = read(fd, out, BUFFER_SIZE);
         if (nbytes == 0)
-            break ;
-        out = ft_strjoin(out, buffer);
+        {
+            free(buffer);
+            return (NULL);
+        }
+        out[nbytes] == '\0';
+        buffer = ft_strjoin(buffer, out);
+        if (searchn(buffer) > 0)
+            break;
     }
-    free(buffer);
-    return (out);
+    free(out);
+    return (buffer);
 }
 
 char *getout(char *buffer)
@@ -59,6 +66,8 @@ char *getout(char *buffer)
 
     i = 0;
     out = ft_calloc(searchn(buffer), sizeof(char));
+    if (!out)
+        return (NULL);
     while (buffer[i] != '\n' && buffer[i] != '\0')
     {
         out[i] = buffer[i];
@@ -73,15 +82,25 @@ char *getout(char *buffer)
 char *cutn(char *c)
 {
     int i;
-    int x;
+    int count;
     char *out;
 
-    i = searchn(c) + 1;
-    x = ft_strlen(c) - i;
-    out = ft_calloc(x + 1, sizeof(char));
-    x = 0;
+    i = 0;
+    count = 0;
+    while (c[count] && c[count] != '\n')
+        count++;
+    if (!c[count])
+    {
+        free(c);
+        return (NULL);
+    }
+    if (c[count] == '\n')
+        count++;
+    out = ft_calloc((ft_strlen(c) - count) + 1, sizeof(char));
+    if (!out)
+        return (NULL);
     while(c[i] != '\0')
-        out[x++] = c[i++];
+        out[count++] = c[i++];
     return (out);
 }
 
@@ -90,24 +109,27 @@ char *get_next_line(int fd)
     char *out;
     static char *temp;
 
-    if (!temp || searchn(temp) == 0)
-    {
-        out = readdoc(fd);
-        if(temp != NULL)
-            out = ft_strjoin(temp, out);
-        temp = cutn(out);
-        out = getout(out);
-    }
-    else
-    {
-        out = getout(temp);
-        temp = cutn(temp);
-    }
+    if (read(fd, 0, 0) < 0)
+	{
+		if (temp != NULL)
+		{
+			free(temp);
+			temp = NULL;
+		}
+		return (NULL);
+	}
+	if (fd < 0 || BUFFER_SIZE < 0)
+		return (NULL);
+    temp = readdoc(fd, temp);
+    if (!temp)
+        return (NULL);
+    out = ft_strdup(temp);
+    temp = cutn(temp);
     return (out);
 }
 
 
-
+/*
 int main()
 {
 	int fd = open("archivo.txt", O_RDONLY);
@@ -120,3 +142,4 @@ int main()
 
 	system("leaks -q a.out");
 }
+*/

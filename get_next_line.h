@@ -10,8 +10,9 @@
     int	ft_strlen(const char *str);
     void	*ft_calloc(size_t num, size_t size);
     char	*ft_strjoin(char const *s1, char const *s2);
+    char	*ft_strdup(const char *s);
     int searchn(char *c);
-    char *readdoc(int fd);
+    char *readdoc(int fd, char *buffer);
     char *getout(char *buffer);
     char *cutn(char *c);
     char *get_next_line(int fd);
