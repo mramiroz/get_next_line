@@ -64,7 +64,10 @@ char *getout(char *buffer)
         out[i] = buffer[i];
         i++;
     }
-    out[i] = '\0';
+    if(buffer[i] == '\n')
+        out[i] = '\n';
+    else
+        out[i] = '\0';
     free(buffer);
     return (out);
 
@@ -90,6 +93,17 @@ char *get_next_line(int fd)
     char *out;
     static char *temp;
 
+    if (read(fd, 0, 0) < 0)
+	{
+		if (temp != NULL)
+		{
+			free(temp);
+			temp = NULL;
+		}
+		return (NULL);
+	}
+	if (fd < 0 || BUFFER_SIZE < 0)
+		return (NULL);
     if (!temp || searchn(temp) == 0)
     {
         out = readdoc(fd);
