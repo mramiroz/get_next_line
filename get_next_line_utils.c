@@ -27,18 +27,18 @@ void	*ft_calloc(size_t num, size_t size)
 {
 	char	*s;
 	int		len;
-    int     i;
+	int		i;
 
-    i = 0;
+	i = 0;
 	len = num * size;
 	s = malloc (len);
 	if (!s || (len && (len / size != num)))
 		return (0);
 	while (i < len)
-    {
-        s[i] = '\0';
-        i++;
-    }
+	{
+		s[i] = '\0';
+		i++;
+	}
 	return (s);
 }
 
