@@ -40,13 +40,20 @@ char *readdoc(int fd)
     nbytes = 1;
     out = ft_calloc(1, sizeof(char));
     buffer = ft_calloc(1, sizeof(char));
-    
+    if (!out || !buffer)
+        return(NULL);
     while(nbytes > 0 && searchn(out) == 0)
     {
         nbytes = read(fd, buffer, BUFFER_SIZE);
-        if (nbytes == 0)
-            break ;
+        if (nbytes == -1)
+        {
+            free(buffer);
+            return(NULL);
+        }
+        buffer[nbytes] = '\0';
         out = ft_strjoin(out, buffer);
+        if(searchn(buffer) != 0)
+            break ;
     }
     free(buffer);
     return (out);
@@ -104,19 +111,11 @@ char *get_next_line(int fd)
 	}
 	if (fd < 0 || BUFFER_SIZE < 0)
 		return (NULL);
-    if (!temp || searchn(temp) == 0)
-    {
-        out = readdoc(fd);
-        if(temp != NULL)
-            out = ft_strjoin(temp, out);
-        temp = cutn(out);
-        out = getout(out);
-    }
-    else
-    {
-        out = getout(temp);
-        temp = cutn(temp);
-    }
+    out = readdoc(fd);
+    if(temp != NULL)
+        out = ft_strjoin(temp, out);
+    temp = cutn(out);
+    out = getout(out);
     return (out);
 }
 
