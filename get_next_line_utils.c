@@ -42,7 +42,7 @@ void	*ft_calloc(size_t num, size_t size)
 	return (s);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	int		i;
 	int		len1;
@@ -69,4 +69,35 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	}
 	s[len1] = '\0';
 	return (s);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*dest;
+	int		i;
+	int		size;
+
+	i = 0;
+	size = ft_strlen(s);
+	dest = (char *)malloc(sizeof(char) * (size + 1));
+	if (!dest)
+		return (NULL);
+	while (s[i] != '\0')
+	{
+		dest[i] = s[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+char	*ft_join(char *s1, char *s2)
+{
+	char	*aux;
+
+	aux = ft_strjoin(s1, s2);
+	if (!aux)
+		return (NULL);
+	free (s1);
+	return (aux);
 }

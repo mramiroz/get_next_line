@@ -51,7 +51,7 @@ char	*readdoc(int fd)
 			return (NULL);
 		}
 		buffer[nbytes] = '\0';
-		out = ft_strjoin(out, buffer);
+		out = ft_join(out, buffer);
 		if (searchn(buffer) != 0)
 			break ;
 	}
@@ -63,20 +63,22 @@ char	*getout(char *buffer)
 {
 	int		i;
 	char	*out;
+	char	*temp;
 
 	i = 0;
-	out = ft_calloc(searchn(buffer), sizeof(char));
-	if (!out)
+	temp = ft_calloc(2, sizeof(char));
+	out = ft_calloc(searchn(buffer) + 1, sizeof(char));
+	if (!out || !temp)
 		return (NULL);
+	temp[0] = '\n';
 	while (buffer[i] != '\n' && buffer[i] != '\0')
 	{
 		out[i] = buffer[i];
 		i++;
 	}
 	if (buffer[i] == '\n')
-		out[i] = '\n';
-	else
-		out[i] = '\0';
+		out = ft_join(out, temp);
+	free (temp);
 	free (buffer);
 	return (out);
 }
@@ -101,6 +103,7 @@ char	*cutn(char *c)
 char	*get_next_line(int fd)
 {
 	char		*out;
+	char		*aux;
 	static char	*temp;
 
 	if (read(fd, 0, 0) < 0)
@@ -116,7 +119,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	out = readdoc(fd);
 	if (temp != NULL)
-		out = ft_strjoin(temp, out);
+		out = ft_join(temp, out);
 	temp = cutn(out);
 	out = getout(out);
 	return (out);
@@ -127,10 +130,8 @@ int main()
 	int fd = open("archivo.txt", O_RDONLY);
 	printf("Return: %s\n", get_next_line(fd));
 	printf("Return: %s\n", get_next_line(fd));
-	printf("Return: %s\n", get_next_line(fd));
-	printf("Return: %s\n", get_next_line(fd));
-
-
+	//printf("Return: %s\n", get_next_line(fd));
+	//printf("Return: %s\n", get_next_line(fd));
 
 	system("leaks -q a.out");
 }
