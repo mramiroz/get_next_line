@@ -28,68 +28,55 @@ int	searchn(char *c)
 			return (i);
 		i++;
 	}
-	return (0);
+	return (-1);
 }
 
-char	*readdoc(int fd)
+static char	*readdoc(char *buffer, int fd)
 {
-	char	*out;
-	char	*buffer;
-	int		nbytes;
+	char	*tmp;
+	int		numbytes;
 
-	nbytes = 1;
-	out = ft_calloc(1, sizeof(char));
-	buffer = ft_calloc(1, sizeof(char));
-	if (!out || !buffer)
+	if (buffer == NULL)
+		buffer = ft_calloc(1, sizeof(char));
+	numbytes = 1;
+	tmp = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
+	if (tmp == NULL)
 		return (NULL);
-	while (nbytes > 0 && searchn(out) == 0)
+	while (0 < numbytes)
 	{
-		nbytes = read(fd, buffer, BUFFER_SIZE);
-		if (nbytes == -1)
+		numbytes = read(fd, tmp, BUFFER_SIZE);
+		if (numbytes == -1)
 		{
-			free (buffer);
+			free(tmp);
 			return (NULL);
 		}
-		buffer[nbytes] = '\0';
-		out = ft_join(out, buffer);
-		if (searchn(buffer) != 0)
+		tmp[numbytes] = '\0';
+		buffer = ft_join(buffer, tmp);
+		if (searchn(buffer) > -1)
 			break ;
+		if (numbytes == 0 && ft_strlen(buffer) == 0)
+			return(NULL);
 	}
-	free (buffer);
-	return (out);
+	free(tmp);
+	return (buffer);
 }
 
-char	*getout(char *buffer)
-{
-	int		i;
-	char	*out;
-	char	*temp;
-
-	i = 0;
-	temp = ft_calloc(2, sizeof(char));
-	out = ft_calloc(searchn(buffer) + 1, sizeof(char));
-	if (!out || !temp)
-		return (NULL);
-	temp[0] = '\n';
-	while (buffer[i] != '\n' && buffer[i] != '\0')
-	{
-		out[i] = buffer[i];
-		i++;
-	}
-	if (buffer[i] == '\n')
-		out = ft_join(out, temp);
-	free (temp);
-	free (buffer);
-	return (out);
-}
-
-char	*cutn(char *c)
+static char	*cutn(char *c)
 {
 	int		i;
 	int		x;
 	char	*out;
 
-	i = searchn(c) + 1;
+	i = 0;
+	while (c[i] && c[i] != '\n')
+		i++;
+	if (!c[i])
+	{
+		free(c);
+		return (NULL);
+	}
+	if (c[i] == '\n')
+		i++;
 	x = ft_strlen(c) - i;
 	out = ft_calloc(x + 1, sizeof(char));
 	if (!out)
@@ -97,13 +84,13 @@ char	*cutn(char *c)
 	x = 0;
 	while (c[i] != '\0')
 		out[x++] = c[i++];
+	free (c);
 	return (out);
 }
 
 char	*get_next_line(int fd)
 {
 	char		*out;
-	char		*aux;
 	static char	*temp;
 
 	if (read(fd, 0, 0) < 0)
@@ -117,21 +104,22 @@ char	*get_next_line(int fd)
 	}
 	if (fd < 0 || BUFFER_SIZE < 0)
 		return (NULL);
-	out = readdoc(fd);
-	if (temp != NULL)
-		out = ft_join(temp, out);
-	temp = cutn(out);
-	out = getout(out);
+	temp = readdoc(temp, fd);
+	if (!temp)
+		return (NULL);
+	out = ft_strdup(temp);
+	temp = cutn(temp);
 	return (out);
 }
+
 
 int main()
 {
 	int fd = open("archivo.txt", O_RDONLY);
-	printf("Return: %s\n", get_next_line(fd));
-	printf("Return: %s\n", get_next_line(fd));
-	//printf("Return: %s\n", get_next_line(fd));
-	//printf("Return: %s\n", get_next_line(fd));
+	printf("R: %s\n", get_next_line(fd));
+	printf("R: %s\n", get_next_line(fd));
+	printf("R: %s\n", get_next_line(fd));
+	printf("R: %s\n", get_next_line(fd));
 
 	system("leaks -q a.out");
 }
