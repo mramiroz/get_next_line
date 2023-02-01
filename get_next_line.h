@@ -29,6 +29,6 @@ char	*ft_strjoin(char *s1, char *s2);
 int		searchn(char *c);
 char	*get_next_line(int fd);
 char	*ft_join(char *s1, char *s2);
-char	*ft_strdup(const char *s);
+char	*ft_strdup(char *s);
 
 #endif
