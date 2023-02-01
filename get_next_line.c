@@ -100,12 +100,16 @@ char	*get_next_line(int fd)
 		}
 		return (NULL);
 	}
-	if (fd < 0 || BUFFER_SIZE < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	temp = readdoc(temp, fd);
 	if (ft_strlen(temp) == 0)
 	{
-		free (temp);
+		if(temp != NULL)
+		{
+			free (temp);
+			temp =  NULL;
+		}
 		return (NULL);
 	}
 	out = ft_strdup(temp);
