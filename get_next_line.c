@@ -105,11 +105,8 @@ char	*get_next_line(int fd)
 	temp = readdoc(temp, fd);
 	if (ft_strlen(temp) == 0)
 	{
-		if(temp != NULL)
-		{
-			free (temp);
-			temp =  NULL;
-		}
+		free (temp);
+		temp = NULL;
 		return (NULL);
 	}
 	out = ft_strdup(temp);
